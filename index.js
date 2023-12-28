@@ -1,6 +1,7 @@
 // we will use a cake example.
 
 const redux = require("redux");
+const createStore = redux.createStore
 
 // we first create an action type
 
@@ -38,3 +39,33 @@ const reducer = (state = initialState, action) => {
 };
 
 // we then create a 'store' which will hold the initial state as an object
+// it accepts the reducers as parameter
+// the reducer holds the initial state
+const store = createStore(reducer)
+
+//store has a method subscribe that executes every time the state changes
+// we return the updated state after the dispatch using getState
+// this 'listens' for changes
+const unsub = store.subscribe(() => console.log('Updated State', store.getState()))
+console.log('Initial State', store.getState())
+
+
+
+
+// console.log('After first cake order',store.getState())
+unsub()
+// we dispatch the action that is going to change the state via the reducer
+store.dispatch(orderCake())
+console.log('Updated State', store.getState())
+store.dispatch(orderCake())
+console.log('Updated State', store.getState())
+store.dispatch(orderCake())
+console.log('Updated State', store.getState())
+store.dispatch(orderCake())
+
+// unsub()
+
+store.dispatch(orderCake())
+store.dispatch(orderCake())
+store.dispatch(orderCake())
+console.log('Updated State', store.getState())
