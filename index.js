@@ -6,7 +6,9 @@ const createStore = redux.createStore;
 const bindActionCreators = redux.bindActionCreators;
 const combineReducers = redux.combineReducers;
 const produce = require("immer").produce;
-
+const reduxLogger = require('redux-logger')
+const logger = reduxLogger.createLogger()
+const applyMiddleware = redux.applyMiddleware
 // we first create an action type
 
 const CAKE_ORDERED = "CAKE_ORDERED";
@@ -144,7 +146,7 @@ const rootReducer = combineReducers({
   Icecream: iceCreamReducer,
 });
 
-const store = createStore(rootReducer);
+const store = createStore(rootReducer, applyMiddleware(logger));
 // const store = createStore(redux.combineReducers({
 //     iceCreamReducer,
 //     cakeReducer
@@ -155,9 +157,9 @@ const store = createStore(rootReducer);
 // this 'listens' for changes
 console.log("Initial State", store.getState());
 
-const unsub = store.subscribe(() =>
-  console.log("Updated State", store.getState())
-);
+// const unsub = store.subscribe(() =>
+//   console.log("Updated State", store.getState())
+// );
 
 // console.log('After first cake order',store.getState())
 
@@ -193,7 +195,7 @@ actions.orderIcecream(2);
 actions.orderIcecream(2);
 actions.restockIcecream(4);
 
-unsub();
+// unsub();
 // console.log("Updated State", store.getState());
 
 // unsub();
