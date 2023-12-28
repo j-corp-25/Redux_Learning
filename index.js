@@ -11,6 +11,7 @@ const CAKE_ORDERED = "CAKE_ORDERED";
 const RESTOCK_CAKE = "RESTOCK_CAKE";
 
 const ORDERED_ICECREAM = "ORDERED_ICECREAM";
+const RESTOCK_ICECREAM = "RESTOCK_ICECREAM";
 
 function orderIcecream(qty = 1) {
   return {
@@ -18,7 +19,6 @@ function orderIcecream(qty = 1) {
     payload: qty,
   };
 }
-const RESTOCK_ICECREAM = "RESTOCK_ICECREAM";
 
 function restockIcecream(qty = 1) {
   return {
@@ -46,14 +46,22 @@ function restockCake(qty = 1) {
 }
 // then we need to initialyze the state, which will be our initial. how will our application state look from the beginning
 
-const initialState = {
+// const initialState = {
+//   numOfCakes: 10,
+//   numOfIcecreams: 10,
+// };
+
+const initialCakeState = {
   numOfCakes: 10,
+};
+
+const initialIceCreamState = {
   numOfIcecreams: 10,
 };
 
 // reducer is needed  to update the application states through action
 // takes in state then updates it after an action is fired by a dispatcher
-const reducer = (state = initialState, action) => {
+const cakeReducer = (state = initialCakeState, action) => {
   switch (action.type) {
     case CAKE_ORDERED:
       // when a cake is ordred we copy the state with the spread operator and then reduce numOfCakes by one
@@ -66,6 +74,34 @@ const reducer = (state = initialState, action) => {
         ...state,
         numOfCakes: state.numOfCakes + action.payload,
       };
+    // case ORDERED_ICECREAM:
+    //   // when a cake is ordred we copy the state with the spread operator and then reduce numOfCakes by one
+    //   return {
+    //     ...state,
+    //     numOfIcecreams: state.numOfIcecreams - action.payload,
+    //   };
+    // case RESTOCK_ICECREAM:
+    //   return {
+    //     ...state,
+    //     numOfIcecreams: state.numOfIcecreams + action.payload,
+    //   };
+    default:
+      return state;
+  }
+};
+const iceCreamReducer = (state = initialIceCreamState, action) => {
+  switch (action.type) {
+    // case CAKE_ORDERED:
+    //   // when a cake is ordred we copy the state with the spread operator and then reduce numOfCakes by one
+    //   return {
+    //     ...state,
+    //     numOfCakes: state.numOfCakes - action.payload,
+    //   };
+    // case RESTOCK_CAKE:
+    //   return {
+    //     ...state,
+    //     numOfCakes: state.numOfCakes + action.payload,
+    //   };
     case ORDERED_ICECREAM:
       // when a cake is ordred we copy the state with the spread operator and then reduce numOfCakes by one
       return {
@@ -85,7 +121,12 @@ const reducer = (state = initialState, action) => {
 // we then create a 'store' which will hold the initial state as an object
 // it accepts the reducers as parameter
 // the reducer holds the initial state
-const store = createStore(reducer);
+
+//! createStore only accepts once reducer so we need to use a combine reducer to use both recuders we just used
+const store = createStore(redux.combineReducers({
+    iceCreamReducer,
+    cakeReducer
+}));
 
 //store has a method subscribe that executes every time the state changes
 // we return the updated state after the dispatch using getState
@@ -116,16 +157,19 @@ const unsub = store.subscribe(() =>
 
 // this is a helper function that helps invoke action creator functions
 //  this avoids doing //! store.dispatch(orderCake())
-const actions = bindActionCreators({ orderCake, restockCake, orderIcecream, restockIcecream }, store.dispatch);
+const actions = bindActionCreators(
+  { orderCake, restockCake, orderIcecream, restockIcecream },
+  store.dispatch
+);
 
 actions.orderCake();
-actions.orderCake()
-actions.orderCake()
-actions.restockCake(3)
-actions.orderIcecream(2)
-actions.orderIcecream(2)
-actions.orderIcecream(2)
-actions.restockIcecream(4)
+actions.orderCake();
+actions.orderCake();
+actions.restockCake(3);
+actions.orderIcecream(2);
+actions.orderIcecream(2);
+actions.orderIcecream(2);
+actions.restockIcecream(4);
 
 unsub();
 // console.log("Updated State", store.getState());
