@@ -18,6 +18,24 @@ const cakeSlice = createSlice({
   //   3. next we specify the reducer function
   //add a key reducer
   reducers: {
-    
-  }
+    // here we specify the individual state transitions
+    // here we have a key that is going to receive state and actions as arguments
+    ordered: (state, action) => {
+      // with redux toolkit we can directly mutate the state
+      // redux toolkit under the hood takes care of producing a state
+      state.numOfCakes--;
+    },
+    reStocked: (state, action) => {
+      state.numOfCakes += action.payload;
+    },
+  },
 });
+//we export the reducer here and actions
+module.exports = cakeSlice.reducer;
+//this slice effectively takes care of
+// 1. Action constants,
+// 2. Action object,
+//  3.Action creator,
+// 4.Switch statements
+// 5. handling immutable updates in the reducer
+module.exports.cakeActions = cakeSlice.actions;
