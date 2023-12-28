@@ -4,6 +4,8 @@ const redux = require("redux");
 const createStore = redux.createStore;
 // this is a helper function
 const bindActionCreators = redux.bindActionCreators;
+const combineReducers = redux.combineReducers;
+const produce = require("immer").produce;
 
 // we first create an action type
 
@@ -64,16 +66,22 @@ const initialIceCreamState = {
 const cakeReducer = (state = initialCakeState, action) => {
   switch (action.type) {
     case CAKE_ORDERED:
-      // when a cake is ordred we copy the state with the spread operator and then reduce numOfCakes by one
-      return {
-        ...state,
-        numOfCakes: state.numOfCakes - action.payload,
-      };
+      return produce(state, (draft) => {
+        draft.numOfCakes -= action.payload;
+      });
+    // when a cake is ordred we copy the state with the spread operator and then reduce numOfCakes by one
+    //   return {
+    //     ...state,
+    //     numOfCakes: state.numOfCakes - action.payload,
+    //   };
     case RESTOCK_CAKE:
-      return {
-        ...state,
-        numOfCakes: state.numOfCakes + action.payload,
-      };
+      return produce(state, (draft) => {
+        draft.numOfCakes += action.payload;
+      });
+    //   return {
+    //     ...state,
+    //     numOfCakes: state.numOfCakes + action.payload,
+    //   };
     // case ORDERED_ICECREAM:
     //   // when a cake is ordred we copy the state with the spread operator and then reduce numOfCakes by one
     //   return {
@@ -104,15 +112,21 @@ const iceCreamReducer = (state = initialIceCreamState, action) => {
     //   };
     case ORDERED_ICECREAM:
       // when a cake is ordred we copy the state with the spread operator and then reduce numOfCakes by one
-      return {
-        ...state,
-        numOfIcecreams: state.numOfIcecreams - action.payload,
-      };
+      //   return {
+      //     ...state,
+      //     numOfIcecreams: state.numOfIcecreams - action.payload,
+      //   };
+      return produce(state, (draft) => {
+        draft.numOfIcecreams -= action.payload;
+      });
     case RESTOCK_ICECREAM:
-      return {
-        ...state,
-        numOfIcecreams: state.numOfIcecreams + action.payload,
-      };
+      //   return {
+      //     ...state,
+      //     numOfIcecreams: state.numOfIcecreams + action.payload,
+      //   };
+      return produce(state, (draft) => {
+        draft.numOfIcecreams += action.payload;
+      });
     default:
       return state;
   }
@@ -123,10 +137,18 @@ const iceCreamReducer = (state = initialIceCreamState, action) => {
 // the reducer holds the initial state
 
 //! createStore only accepts once reducer so we need to use a combine reducer to use both recuders we just used
-const store = createStore(redux.combineReducers({
-    iceCreamReducer,
-    cakeReducer
-}));
+//! the convention is to call all combination of reducers rootReducer
+
+const rootReducer = combineReducers({
+  Cake: cakeReducer,
+  Icecream: iceCreamReducer,
+});
+
+const store = createStore(rootReducer);
+// const store = createStore(redux.combineReducers({
+//     iceCreamReducer,
+//     cakeReducer
+// }));
 
 //store has a method subscribe that executes every time the state changes
 // we return the updated state after the dispatch using getState
