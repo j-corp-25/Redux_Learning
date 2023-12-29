@@ -31,11 +31,16 @@ const cakeSlice = createSlice({
   },
 });
 //we export the reducer here and actions
-module.exports = cakeSlice.reducer;
 //this slice effectively takes care of
 // 1. Action constants,
 // 2. Action object,
 //  3.Action creator,
 // 4.Switch statements
 // 5. handling immutable updates in the reducer
-module.exports.cakeActions = cakeSlice.actions;
+// module.exports = cakeSlice.reducer;
+// module.exports.cakeActions = cakeSlice.actions;
+
+module.exports = {
+  cakeActions: cakeSlice.actions,
+  cakeReducer: cakeSlice.reducer,
+};
